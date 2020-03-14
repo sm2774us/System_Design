@@ -337,7 +337,7 @@ Some statistics worth tracking: country of the visitor, date and time of access,
 
 ###
 
-> 12\. ***Security and Permissions***
+> 12\. ***Security and Permissions***  
 ```#```
 
 Can users create private URLs or allow a particular set of users to access a URL?
