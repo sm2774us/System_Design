@@ -1,11 +1,15 @@
 Designing a URL Shortening service like TinyURL
 ===============================================
 
-Let's design a URL shortening service like TinyURL. This service will provide short aliases redirecting to long URLs. Similar services: bit.ly, goo.gl, qlink.me, etc. Difficulty Level: Easy
+Let's design a URL shortening service like TinyURL. This service will provide short aliases redirecting to long URLs.  
 
-###
+Similar services: bit.ly, goo.gl, qlink.me, etc.  
+Difficulty Level: Easy
 
-> 1\. ***Why do we need URL shortening?***
+#
+
+> 1\. ***Why do we need URL shortening?***  
+```#```
 
 URL shortening is used to create shorter aliases for long URLs. We call these shortened aliases "short links." Users are redirected to the original URL when they hit these short links. Short links save a lot of space when displayed, printed, messaged, or tweeted. Additionally, users are less likely to mistype shorter URLs.
 
@@ -25,7 +29,8 @@ If you haven't used [tinyurl.com](http://tinyurl.com/) before, please try crea
 
 ###
 
-> 2\. ***Requirements and Goals of the System***
+> 2\. ***Requirements and Goals of the System***  
+```#```
 
 💡     You should always clarify requirements at the beginning of the interview. Be sure to ask questions to find the exact scope of the system that the interviewer has in mind.
 
@@ -51,7 +56,8 @@ Extended Requirements:
 
 ###
 
-> 3\. ***Capacity Estimation and Constraints***
+> 3\. ***Capacity Estimation and Constraints***  
+```#```
 
 Our system will be read-heavy. There will be lots of redirection requests compared to new URL shortenings. Let's assume a 100:1 ratio between read and write.
 
@@ -104,7 +110,8 @@ High level estimates: Assuming 500 million new URLs per month and 100:1 read:wr
 
 ###
 
-> 4\. ***System APIs***
+> 4\. ***System APIs***  
+```#```
 
 💡      Once we've finalized the requirements, it's always a good idea to define the system APIs. This should explicitly state what is expected from the system.
 
@@ -125,7 +132,7 @@ Returns: (string)\
 A successful insertion returns the shortened URL; otherwise, it returns an error code.
 
 ```
-deleteURL(api_dev_key, url_key)
+deleteURL(api_dev_key, url_kexy)
 ```
 
 Where "url_key" is a string representing the shortened URL to be retrieved. A successful deletion returns 'URL Removed'.
@@ -134,7 +141,8 @@ How do we detect and prevent abuse? A malicious user can put us out of business
 
 ###
 
-> 5\. ***Database Design***
+> 5\. ***Database Design***  
+```#```
 
 💡      Defining the DB schema in the early stages of the interview would help to understand the data flow among various components and later would guide towards data partitioning.
 
@@ -156,7 +164,8 @@ What kind of database should we use? Since we anticipate storing billions of ro
 
 ###
 
-> 6\. ***Basic System Design and Algorithm***
+> 6\. ***Basic System Design and Algorithm***  
+```#```
 
 The problem we are solving here is, how to generate a short and unique key for a given URL.
 
@@ -218,6 +227,7 @@ KGS also has to make sure not to give the same key to multiple servers. For that
 **What would be the key-DB size?** With base64 encoding, we can generate 68.7B unique six letters keys. If we need one byte to store one alpha-numeric character, we can store all these keys in:
 
 ```6 (characters per key) * 68.7B (unique keys) = 412 GB.```
+```#```
 
 **Isn't KGS a single point of failure?** Yes, it is. To solve this, we can have a standby replica of KGS. Whenever the primary server dies, the standby server can take over to generate and provide keys.
 
@@ -232,7 +242,8 @@ KGS also has to make sure not to give the same key to multiple servers. For that
 
 ###
 
-> 7\. ***Data Partitioning and Replication***
+> 7\. ***Data Partitioning and Replication***  
+```#```
 
 To scale out our DB, we need to partition it so that it can store information about billions of URLs. We need to come up with a partitioning scheme that would divide and store our data into different DB servers.
 
@@ -248,7 +259,8 @@ This approach can still lead to overloaded partitions, which can be solved by us
 
 ###
 
-> 8\. ***Cache***
+> 8\. ***Cache***  
+```#```
 
 We can cache URLs that are frequently accessed. We can use some off-the-shelf solution like [Memcached](https://en.wikipedia.org/wiki/Memcached), which can store full URLs with their respective hashes. The application servers, before hitting backend storage, can quickly check if the cache has the desired URL.
 
@@ -283,7 +295,8 @@ Request flow for accessing a shortened URL
 
 ###
 
-> 9\. ***Load Balancer (LB)***
+> 9\. ***Load Balancer (LB)***  
+```#```
 
 We can add a Load balancing layer at three places in our system:
 
@@ -297,7 +310,8 @@ A problem with Round Robin LB is that we don't take the server load into conside
 
 ###
 
-> 10\. ***Purging or DB cleanup***
+> 10\. ***Purging or DB cleanup***  
+```#```
 
 Should entries stick around forever or should they be purged? If a user-specified expiration time is reached, what should happen to the link?
 
@@ -314,7 +328,8 @@ If we chose to actively search for expired links to remove them, it would put a 
 
 ###
 
-> 11\. ***Telemetry***
+> 11\. ***Telemetry***  
+```#```
 
 How many times a short URL has been used, what were user locations, etc.? How would we store these statistics? If it is part of a DB row that gets updated on each view, what will happen when a popular URL is slammed with a large number of concurrent requests?
 
@@ -323,6 +338,7 @@ Some statistics worth tracking: country of the visitor, date and time of access,
 ###
 
 > 12\. ***Security and Permissions***
+```#```
 
 Can users create private URLs or allow a particular set of users to access a URL?
 
