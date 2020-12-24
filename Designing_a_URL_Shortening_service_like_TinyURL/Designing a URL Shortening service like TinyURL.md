@@ -81,7 +81,7 @@ Let's assume that each stored object will be approximately 500 bytes (just a bal
 
 ```30 billion * 500 bytes = 15 TB```
 
-[![](https://github.com/sm2774us/System_Design/blob/master/url-shortening-capacity-estimation-and-constraints.PNG)](https://github.com/sm2774us/System_Design/blob/master/url-shortening-capacity-estimation-and-constraints.PNG)
+[![](assets/url-shortening-capacity-estimation-and-constraints.PNG)](assets/url-shortening-capacity-estimation-and-constraints.PNG)
 
 Bandwidth estimates: For write requests, since we expect 200 new URLs every second, total incoming data for our service will be 100KB per second:
 
@@ -105,8 +105,8 @@ One thing to note here is that since there will be a lot of duplicate requests (
 
 High level estimates: Assuming 500 million new URLs per month and 100:1 read:write ratio, following is the summary of the high level estimates for our service:
 
-[![](https://github.com/sm2774us/System_Design/blob/master/url-shortening-bandwidth-estimates.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/url-shortening-bandwidth-estimates.PNG)
+[![](assets/url-shortening-bandwidth-estimates.PNG
+)](assets/url-shortening-bandwidth-estimates.PNG)
 
 ###
 
@@ -157,8 +157,8 @@ A few observations about the nature of the data we will store:
 
 We would need two tables: one for storing information about the URL mappings, and one for the user's data who created the short link.
 
-[![](https://github.com/sm2774us/System_Design/blob/master/url-shortening-database-design.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/url-shortening-database-design.PNG)
+[![](assets/url-shortening-database-design.PNG
+)](assets/url-shortening-database-design.PNG)
 
 What kind of database should we use? Since we anticipate storing billions of rows, and we don't need to use relationships between objects -- a NoSQL store like [DynamoDB](https://en.wikipedia.org/wiki/Amazon_DynamoDB), [Cassandra](https://en.wikipedia.org/wiki/Apache_Cassandra) or [Riak](https://en.wikipedia.org/wiki/Riak) is a better choice. A NoSQL choice would also be easier to scale. Please see [SQL vs NoSQL](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5728116278296576/) for more details.
 
@@ -193,24 +193,24 @@ Another solution could be to append user id (which should be unique) to the inpu
 
 Request flow for shortening of a URL
 
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-1.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-1.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-2.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-2.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-3.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-3.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-4.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-4.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-5.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-5.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-6.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-6.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-7.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-7.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-8.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-8.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-9.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-url-shortening-service-9.PNG)
+[![](assets/request-flow-url-shortening-service-1.PNG
+)](assets/request-flow-url-shortening-service-1.PNG)
+[![](assets/request-flow-url-shortening-service-2.PNG
+)](assets/request-flow-url-shortening-service-2.PNG)
+[![](assets/request-flow-url-shortening-service-3.PNG
+)](assets/request-flow-url-shortening-service-3.PNG)
+[![](assets/request-flow-url-shortening-service-4.PNG
+)](assets/request-flow-url-shortening-service-4.PNG)
+[![](assets/request-flow-url-shortening-service-5.PNG
+)](assets/request-flow-url-shortening-service-5.PNG)
+[![](assets/request-flow-url-shortening-service-6.PNG
+)](assets/request-flow-url-shortening-service-6.PNG)
+[![](assets/request-flow-url-shortening-service-7.PNG
+)](assets/request-flow-url-shortening-service-7.PNG)
+[![](assets/request-flow-url-shortening-service-8.PNG
+)](assets/request-flow-url-shortening-service-8.PNG)
+[![](assets/request-flow-url-shortening-service-9.PNG
+)](assets/request-flow-url-shortening-service-9.PNG)
 
 ### b. Generating keys offline [#](https://www.educative.io/courses/grokking-the-system-design-interview/m2ygV4E81AR#b-generating-keys-offline)
 
@@ -237,8 +237,8 @@ KGS also has to make sure not to give the same key to multiple servers. For that
 
 **Should we impose size limits on custom aliases?** Our service supports custom aliases. Users can pick any 'key' they like, but providing a custom alias is not mandatory. However, it is reasonable (and often desirable) to impose a size limit on a custom alias to ensure we have a consistent URL database. Let's assume users can specify a maximum of 16 characters per customer key (as reflected in the above database schema).
 
-[![](https://github.com/sm2774us/System_Design/blob/master/high-level-system-design-for-url-shortening.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/high-level-system-design-for-url-shortening.PNG)
+[![](assets/high-level-system-design-for-url-shortening.PNG
+)](assets/high-level-system-design-for-url-shortening.PNG)
 
 ###
 
@@ -274,24 +274,24 @@ How can each cache replica be updated? Whenever there is a cache miss, our serv
 
 Request flow for accessing a shortened URL
 
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-1.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-1.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-2.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-2.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-3.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-3.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-4.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-4.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-5.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-5.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-6.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-6.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-7.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-7.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-8.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-8.PNG)
-[![](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-9.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/request-flow-for-accessing-a-shortened-url-9.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-1.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-1.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-2.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-2.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-3.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-3.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-4.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-4.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-5.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-5.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-6.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-6.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-7.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-7.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-8.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-8.PNG)
+[![](assets/request-flow-for-accessing-a-shortened-url-9.PNG
+)](assets/request-flow-for-accessing-a-shortened-url-9.PNG)
 
 ###
 
@@ -323,8 +323,8 @@ If we chose to actively search for expired links to remove them, it would put a 
 -   After removing an expired link, we can put the key back in the key-DB to be reused.
 -   Should we remove links that haven't been visited in some length of time, say six months? This could be tricky. Since storage is getting cheap, we can decide to keep links forever.
 
-[![](https://github.com/sm2774us/System_Design/blob/master/detailed-component-design-for-url-shortening.PNG
-)](https://github.com/sm2774us/System_Design/blob/master/detailed-component-design-for-url-shortening.PNG)
+[![](assets/detailed-component-design-for-url-shortening.PNG
+)](assets/detailed-component-design-for-url-shortening.PNG)
 
 ###
 
