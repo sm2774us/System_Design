@@ -1,9 +1,9 @@
-#System Design
+# System Design
 
 We'll cover the following:
 * [Step 1: Requirements Clarifications](#step-1-requirements-clarifications)
 
-##Step 1: Requirements Clarifications  
+## Step 1: Requirements Clarifications  
 It is always a good idea to ask questions about the exact scope of the problem we are solving. Design questions are mostly open-ended, and they don’t have ONE correct answer, that’s why clarifying ambiguities early in the interview becomes critical. Candidates who spend enough time to define the end goals of the system always have a better chance to be successful in the interview. Also, since we only have 35-40 minutes to design a (supposedly) large system, we should clarify what parts of the system we will be focusing on.  
 Let’s expand this with an actual example of designing a Twitter-like service. Here are some questions for designing Twitter that should be answered before moving on to the next steps:
   - Will users of our service be able to post tweets and follow other people?
