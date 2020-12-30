@@ -1,14 +1,21 @@
-Designing a URL Shortening service like TinyURL
-===============================================
+# Designing a URL Shortening service like TinyURL
+-------------------------------------------------
 
 Let's design a URL shortening service like TinyURL. This service will provide short aliases redirecting to long URLs.  
 
 Similar services: bit.ly, goo.gl, qlink.me, etc.  
 Difficulty Level: Easy
 
-#
+We'll cover the following:
+* [1. Why do we need URL shortening?](#1-why-do-we-need-url-shortening)
+* [Step 2: Back-of-the-envelope estimation](#step-2-back-of-the-envelope-estimation)
+* [Step 3: System interface definition](#step-3-system-interface-definition)
+* [Step 4: Defining data model](#step-4-defining-data-model)
+* [Step 5: High-level design](#step-5-high-level-design)
+* [Step 6: Detailed design](#step-6-detailed-design)
+* [Step 7: Identifying and resolving bottlenecks](#step-7-identifying-and-resolving-bottlenecks)
 
-> 1\. ***Why do we need URL shortening?***  
+## 1. Why do we need URL shortening?  
 ```#```
 
 URL shortening is used to create shorter aliases for long URLs. We call these shortened aliases "short links." Users are redirected to the original URL when they hit these short links. Short links save a lot of space when displayed, printed, messaged, or tweeted. Additionally, users are less likely to mistype shorter URLs.
@@ -310,7 +317,7 @@ A problem with Round Robin LB is that we don't take the server load into conside
 
 ###
 
-> 10\. ***Purging or DB cleanup***  
+> 10. ***Purging or DB cleanup***  
 ```#```
 
 Should entries stick around forever or should they be purged? If a user-specified expiration time is reached, what should happen to the link?
@@ -323,8 +330,7 @@ If we chose to actively search for expired links to remove them, it would put a 
 -   After removing an expired link, we can put the key back in the key-DB to be reused.
 -   Should we remove links that haven't been visited in some length of time, say six months? This could be tricky. Since storage is getting cheap, we can decide to keep links forever.
 
-[![](assets/detailed-component-design-for-url-shortening.PNG
-)](assets/detailed-component-design-for-url-shortening.PNG)
+![detailed-component-design-for-url-shortening](assets/detailed-component-design-for-url-shortening.PNG)
 
 ###
 
@@ -343,3 +349,7 @@ Some statistics worth tracking: country of the visitor, date and time of access,
 Can users create private URLs or allow a particular set of users to access a URL?
 
 We can store the permission level (public/private) with each URL in the database. We can also create a separate table to store UserIDs that have permission to see a specific URL. If a user does not have permission and tries to access a URL, we can send an error (HTTP 401) back. Given that we are storing our data in a NoSQL wide-column database like Cassandra, the key for the table storing permissions would be the 'Hash' (or the KGS generated 'key'). The columns will store the UserIDs of those users that have the permission to see the URL.
+
+:back:[Back - `System Design Interviews - A step by step guide`](../README.md)    :arrow_right:[Next - `Designing Pastebin`](../Designing Pastebin/README.md)
+
+[ x ] Mark as Completed

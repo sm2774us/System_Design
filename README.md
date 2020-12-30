@@ -9,6 +9,24 @@ We'll cover the following:
 * [Step 6: Detailed design](#step-6-detailed-design)
 * [Step 7: Identifying and resolving bottlenecks](#step-7-identifying-and-resolving-bottlenecks)
 
+A lot of software engineers struggle with system design interviews (SDIs) 
+primarily because of three reasons:
+
+* The unstructured nature of SDIs, where the candidates are asked to work on an 
+  open-ended design problem that doesn’t have a standard answer.
+* Candidates lack experience in developing complex and large scale systems.
+* Candidates did not spend enough time to prepare for SDIs.
+* Like coding interviews, candidates who haven’t put a deliberate effort to prepare 
+  for SDIs, mostly perform poorly, especially at top companies 
+  like Google, Facebook, Amazon, Microsoft, etc. In these companies, candidates 
+  who do not perform above average have a limited chance to get an offer. 
+  On the other hand, a good performance always results in a better offer 
+  (higher position and salary) since it shows the candidate’s ability to handle 
+  a complex system.
+
+In this course, we’ll follow a step by step approach to solve multiple design problems. 
+First, let’s go through these steps:
+
 ## Step 1: Requirements Clarifications  
 It is always a good idea to ask questions about the exact scope of the problem we are solving. 
 Design questions are mostly open-ended, and they don’t have ONE correct answer, 
@@ -116,4 +134,6 @@ to remain on track and cover all the different aspects while designing a system.
 
 Let’s apply the above guidelines to design a few systems that are asked in SDIs.
 
-:arrow_right:[Next - Designing a URL Shortening service like TinyURL](Designing_a_URL_Shortening_service_like_TinyURL/README.md)
+:arrow_right:[Next - `Designing a URL Shortening service like TinyURL`](Designing_a_URL_Shortening_service_like_TinyURL/README.md)
+
+[ x ] Mark as Completed
