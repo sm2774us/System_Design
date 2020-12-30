@@ -421,7 +421,7 @@ Given that we are storing our data in a NoSQL wide-column database like Cassandr
 storing permissions would be the 'Hash' (or the KGS generated 'key'). The columns will store the UserIDs 
 of those users that have the permission to see the URL.
 
-:back:[Back - `System Design Interviews - A step by step guide`](../README.md)
-:arrow_right:[Next - `Designing Pastebin`](../Designing_Pastebin/README.md)
+:back:[**Back - System Design Interviews - A step by step guide**](../README.md)
+:arrow_right:[**Next - Designing Pastebin**](../Designing_Pastebin/README.md)
 
 - [ x ] Mark as Completed

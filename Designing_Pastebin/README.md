@@ -421,7 +421,7 @@ Given that we are storing our data in a NoSQL wide-column database like Cassandr
 storing permissions would be the 'Hash' (or the KGS generated 'key'). The columns will store the UserIDs 
 of those users that have the permission to see the URL.
 
-:back:[Back - `Designing a URL Shortening service like TinyURL`](../Designing_a_URL_Shortening_service_like_TinyURL/README.md)
-:arrow_right:[Next - `Designing Instagram`](../Designing_Instagram/README.md)
+:back:[**Back - Designing a URL Shortening service like TinyURL**](../Designing_a_URL_Shortening_service_like_TinyURL/README.md)
+:arrow_right:[**Next - Designing Instagram**](../Designing_Instagram/README.md)
 
 - [ x ] Mark as Completed
