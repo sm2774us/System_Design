@@ -115,3 +115,5 @@ successful in system design interviews. The steps mentioned above should guide y
 to remain on track and cover all the different aspects while designing a system.  
 
 Let’s apply the above guidelines to design a few systems that are asked in SDIs.
+
+:arrow_right:[Next - Designing a URL Shortening service like TinyURL](Designing_a_URL_Shortening_service_like_TinyURL/README.md)
