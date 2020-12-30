@@ -61,7 +61,7 @@ Our Pastebin service should meet the following requirements:
 
 ## 3. Some Design Considerations
 
-Pastebin shares some requirements with [URL Shortening service](../Designing_a_URL_Shortening_service_like_TinyURL/README.md#2-requirements-and-goals-of-the-system),
+Pastebin shares some requirements with [URL Shortening service](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md#2-requirements-and-goals-of-the-system),
 but there are some additional design considerations we should keep in mind.
 
 **What should be the limit on the amount of text user can paste at a time?** We can limit users not to have Pastes bigger 
@@ -254,21 +254,23 @@ We can divide our datastore layer into two:
 
 ## 9. Purging or DB cleanup  
 
-Please see [Designing a URL Shortening service: Section 10. Purging or DB cleanup](../Designing_a_URL_Shortening_service_like_TinyURL/README.md#10-purging-or-db-cleanup).
+Please see [Designing a URL Shortening service: Section 10. Purging or DB cleanup](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md#10-purging-or-db-cleanup).
 
 # 10. Data Partitioning and Replication
 
-Please see [Designing a URL Shortening service: Section 7. Data Partitioning and Replication](../Designing_a_URL_Shortening_service_like_TinyURL/README.md#7-data-partitioning-and-replication). 
+Please see [Designing a URL Shortening service: Section 7. Data Partitioning and Replication](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md#7-data-partitioning-and-replication). 
 
 # 11. Cache and Load Balancer.
 
 Please see:
-* [Designing a URL Shortening service: Section 8. Cache](../Designing_a_URL_Shortening_service_like_TinyURL/README.md#8-cache)
-* [Designing a URL Shortening service: Section 9. Load Balancer (LB)](../Designing_a_URL_Shortening_service_like_TinyURL/README.md#9-load-balancer-lb)
+* [Designing a URL Shortening service: Section 8. Cache](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md#8-cache)
+* [Designing a URL Shortening service: Section 9. Load Balancer (LB)](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md#9-load-balancer-lb)
 
 ## 12. Security and Permissions  
 
-:back:[**Back - Designing a URL Shortening service like TinyURL**](../Designing_a_URL_Shortening_service_like_TinyURL/README.md)
-:arrow_right:[**Next - Designing Instagram**](../Designing_Instagram/README.md)
+Please see [Designing a URL Shortening service: Section 12. Security and Permissions](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md#12-security-and-permissions). 
+
+:back:[**Back - Designing a URL Shortening service like TinyURL**](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md)
+:arrow_right:[**Next - Designing Instagram**](../003_Designing_Instagram/README.md)
 
 - [ x ] Mark as Completed

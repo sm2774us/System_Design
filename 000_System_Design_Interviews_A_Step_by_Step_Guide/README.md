@@ -134,6 +134,6 @@ to remain on track and cover all the different aspects while designing a system.
 
 Let’s apply the above guidelines to design a few systems that are asked in SDIs.
 
-:arrow_right:[**Next - Designing a URL Shortening service like TinyURL**](Designing_a_URL_Shortening_service_like_TinyURL/README.md)
+:arrow_right:[**Next - Designing a URL Shortening service like TinyURL**](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md)
 
 - [ x ] Mark as Completed
