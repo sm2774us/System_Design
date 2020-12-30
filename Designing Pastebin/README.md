@@ -1,213 +1,426 @@
-Designing Pastebin
-==================
+# Designing a URL Shortening service like TinyURL
+-------------------------------------------------
 
-Let's design a Pastebin like web service, where users can store plain text. Users of the service will enter a piece of text and get a randomly generated URL to access it. Similar Services: pastebin.com, pasted.co, chopapp.com Difficulty Level: Easy
+Let's design a URL shortening service like TinyURL. This service will provide short aliases redirecting to long URLs.  
 
-#
+Similar services: bit.ly, goo.gl, qlink.me, etc.  
+Difficulty Level: Easy
 
-> 1\. What is Pastebin?
+We'll cover the following:
+* [1. Why do we need URL shortening?](#1-why-do-we-need-url-shortening)
+* [2. Requirements and Goals of the System](#2-requirements-and-goals-of-the-system)
+* [3. Capacity Estimation and Constraints](#3-capacity-estimation-and-constraints)
+* [4. System APIs](#4-system-apis)
+* [5. Database Design](#5-database-design)
+* [6. Basic System Design and Algorithm](#6-basic-system-design-and-algorithm)
+* [7. Data Partitioning and Replication](#7-data-partitioning-and-replication)
+* [8. Cache](#8-cache)
+* [9. Load Balancer (LB)](#9-load-balancer-lb)
+* [10. Purging or DB cleanup](#10-purging-or-db-cleanup)
+* [11. Telemetry](#11-telemetry)  
+* [12. Security and Permissions](#12-security-and-permissions)  
 
-Pastebin like services enable users to store plain text or images over the network (typically the Internet) and generate unique URLs to access the uploaded data. Such services are also used to share data over the network quickly, as users would just need to pass the URL to let other users see it.
+## 1. Why do we need URL shortening?  
 
-If you haven't used [pastebin.com](http://pastebin.com/) before, please try creating a new 'Paste' there and spend some time going through the different options their service offers. This will help you a lot in understanding this chapter.
+URL shortening is used to create shorter aliases for long URLs. 
+We call these shortened aliases "short links." Users are redirected 
+to the original URL when they hit these short links. 
+Short links save a lot of space when displayed, printed, messaged, or tweeted. 
+Additionally, users are less likely to mistype shorter URLs.
 
-###
+For example, if we shorten this page through TinyURL:
 
-> 2\. Requirements and Goals of the System
+> <https://www.educative.io/collection/page/5668639101419520/5649050225344512/5668600916475904/>
 
-Our Pastebin service should meet the following requirements:
+We would get:
 
-Functional Requirements:
+> <http://tinyurl.com/jlg8zpc>
 
-1.  Users should be able to upload or "paste" their data and get a unique URL to access it.
-2.  Users will only be able to upload text.
-3.  Data and links will expire after a specific timespan automatically; users should also be able to specify expiration time.
-4.  Users should optionally be able to pick a custom alias for their paste.
+The shortened URL is nearly one-third the size of the actual URL.
 
-Non-Functional Requirements:
+URL shortening is used for optimizing links across devices, tracking individual links to analyze audience and campaign performance, and hiding affiliated original URLs.
 
-1.  The system should be highly reliable, any data uploaded should not be lost.
-2.  The system should be highly available. This is required because if our service is down, users will not be able to access their Pastes.
-3.  Users should be able to access their Pastes in real-time with minimum latency.
-4.  Paste links should not be guessable (not predictable).
+If you haven't used [tinyurl.com](http://tinyurl.com/) before, 
+please try creating a new shortened URL and spend some time going through 
+the various options their service offers. This will help you a lot in 
+understanding this chapter.
 
-Extended Requirements:
+## 2. Requirements and Goals of the System  
 
-1.  Analytics, e.g., how many times a paste was accessed?
+> :bulb: You should always clarify requirements at the beginning of the interview.
+> 
+>        Be sure to ask questions to find the exact scope of the system that the interviewer has in mind.
+
+Our URL shortening system should meet the following requirements:
+
+**Functional Requirements:**
+
+1.  Given a URL, our service should generate a shorter and unique alias of it. 
+    This is called a short link. This link should be short enough to be easily copied and pasted into applications.
+1.  When users access a short link, our service should redirect them to the original link.
+1.  Users should optionally be able to pick a custom short link for their URL.
+1.  Links will expire after a standard default timespan. Users should be able to specify the expiration time.
+
+**Non-Functional Requirements:**
+
+1.  The system should be highly available. This is required because, if our service is down, 
+    all the URL redirections will start failing.
+1.  URL redirection should happen in real-time with minimal latency.
+1.  Shortened links should not be guessable (not predictable).
+
+**Extended Requirements:**
+
+1.  Analytics; e.g., how many times a redirection happened?
 2.  Our service should also be accessible through REST APIs by other services.
 
-###
+## 3. Capacity Estimation and Constraints  
 
-> 3\. Some Design Considerations
+Our system will be read-heavy. There will be lots of redirection requests compared to new URL shortenings. 
+Let's assume a 100:1 ratio between read and write.
 
-Pastebin shares some requirements with [URL Shortening service](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5668600916475904), but there are some additional design considerations we should keep in mind.
+**Traffic estimates:** Assuming, we will have 500M new URL shortenings per month, with 100:1 read/write ratio, 
+we can expect 50B redirections during the same period:
 
-What should be the limit on the amount of text user can paste at a time? We can limit users not to have Pastes bigger than 10MB to stop the abuse of the service.
+>                                       **100 * 500M => 50B**
 
-Should we impose size limits on custom URLs? Since our service supports custom URLs, users can pick any URL that they like, but providing a custom URL is not mandatory. However, it is reasonable (and often desirable) to impose a size limit on custom URLs, so that we have a consistent URL database.
+What would be Queries Per Second (QPS) for our system? New URLs shortenings per second:
 
-###
+>                     **500 million / (30 days * 24 hours * 3600 seconds) = ~200 URLs/s**
 
-> 4\. Capacity Estimation and Constraints
+Considering 100:1 read/write ratio, URLs redirections per second will be:
 
-Our services will be read-heavy; there will be more read requests compared to new Pastes creation. We can assume a 5:1 ratio between read and write.
+>                                          **100 * 200 URLs/s = 20K/s**
 
-Traffic estimates: Pastebin services are not expected to have traffic similar to Twitter or Facebook, let's assume here that we get one million new pastes added to our system every day. This leaves us with five million reads per day.
+**Storage estimates:** Let's assume we store every URL shortening request (and associated shortened link) for 5 years. 
+Since we expect to have 500M new URLs every month, the total number of objects we expect to store will be 30 billion:
 
-New Pastes per second:
+>                        **500 million * 5 years * 12 months = 30 billion**
 
-1M / (24 hours * 3600 seconds) ~= 12 pastes/sec
+Let's assume that each stored object will be approximately 500 bytes (just a ballpark estimate--we will dig 
+into it later). We will need 15TB of total storage:
 
-Paste reads per second:
+>                                               **30 billion * 500 bytes = 15 TB**
 
-5M / (24 hours * 3600 seconds) ~= 58 reads/sec
+![url-shortening-capacity-estimation-and-constraints](assets/url-shortening-capacity-estimation-and-constraints.PNG)
 
-Storage estimates: Users can upload maximum 10MB of data; commonly Pastebin like services are used to share source code, configs or logs. Such texts are not huge, so let's assume that each paste on average contains 10KB.
+**Bandwidth estimates:** For write requests, since we expect 200 new URLs every second, total incoming data for 
+our service will be 100KB per second:
 
-At this rate, we will be storing 10GB of data per day.
+>                                    **200 * 500 bytes = 100 KB/s**
 
-1M * 10KB => 10 GB/day
+For read requests, since every second we expect ~20K URLs redirections, total outgoing data for our service 
+would be 10MB per second:
 
-If we want to store this data for ten years we would need the total storage capacity of 36TB.
+>                                        **20K * 500 bytes = ~10 MB/s**
 
-With 1M pastes every day we will have 3.6 billion Pastes in 10 years. We need to generate and store keys to uniquely identify these pastes. If we use base64 encoding ([A-Z, a-z, 0-9, ., -]) we would need six letters strings:
+**Memory estimates:** If we want to cache some of the hot URLs that are frequently accessed, 
+how much memory will we need to store them? If we follow the 80-20 rule, meaning 20% of URLs generate 80% of traffic, 
+we would like to cache these 20% hot URLs.
 
-64^6 ~= 68.7 billion unique strings
+Since we have 20K requests per second, we will be getting 1.7 billion requests per day:
 
-If it takes one byte to store one character, total size required to store 3.6B keys would be:
+>                               **20K * 3600 seconds * 24 hours = ~1.7 billion**
 
-3.6B * 6 => 22 GB
+To cache 20% of these requests, we will need 170GB of memory.
 
-22GB is negligible compared to 36TB. To keep some margin, we will assume a 70% capacity model (meaning we don't want to use more than 70% of our total storage capacity at any point), which raises our storage needs to 51.4TB.
+>                                   **0.2 * 1.7 billion * 500 bytes = ~170GB**
 
-Bandwidth estimates: For write requests, we expect 12 new pastes per second, resulting in 120KB of ingress per second.
+One thing to note here is that since there will be a lot of duplicate requests (of the same URL), therefore, 
+our actual memory usage will be less than 170GB.
 
-12 * 10KB => 120 KB/s
+**High level estimates:** Assuming 500 million new URLs per month and 100:1 read:write ratio, 
+following is the summary of the high level estimates for our service:
 
-As for the read request, we expect 58 requests per second. Therefore, total data egress (sent to users) will be 0.6 MB/s.
+![url-shortening-bandwidth-estimates](assets/url-shortening-bandwidth-estimates.PNG)
 
-58 * 10KB => 0.6 MB/s
+## 4. System APIs
 
-Although total ingress and egress are not big, we should keep these numbers in mind while designing our service.
+> :bulb: Once we've finalized the requirements, it's always a good idea to define the system APIs. 
+> 
+>        This should explicitly state what is expected from the system.
 
-Memory estimates: We can cache some of the hot pastes that are frequently accessed. Following the 80-20 rule, meaning 20% of hot pastes generate 80% of traffic, we would like to cache these 20% pastes
-
-Since we have 5M read requests per day, to cache 20% of these requests, we would need:
-
-0.2 * 5M * 10KB ~= 10 GB
-
-###
-
-> 5\. System APIs
-
-We can have SOAP or REST APIs to expose the functionality of our service. Following could be the definitions of the APIs to create/retrieve/delete Pastes:
-
-```
-addPaste(api_dev_key, paste_data, custom_url=None user_name=None, paste_name=None, expire_date=None)
-```
-
-Parameters:\
-api_dev_key (string): The API developer key of a registered account. This will be used to, among other things, throttle users based on their allocated quota.\
-paste_data (string): Textual data of the paste.\
-custom_url (string): Optional custom URL.\
-user_name (string): Optional user name to be used to generate URL.\
-paste_name (string): Optional name of the paste\
-expire_date (string): Optional expiration date for the paste.
-
-Returns: (string)\
-A successful insertion returns the URL through which the paste can be accessed, otherwise, it will return an error code.
-
-Similarly, we can have retrieve and delete Paste APIs:
+We can have SOAP or REST APIs to expose the functionality of our service. 
+Following could be the definitions of the APIs for creating and deleting URLs:
 
 ```
-getPaste(api_dev_key, api_paste_key)
+createURL(api_dev_key,original_url,custom_alias=None,user_name=None,expire_date=None)
 ```
 
-Where "api_paste_key" is a string representing the Paste Key of the paste to be retrieved. This API will return the textual data of the paste.
+**Parameters:**
+```
+api_dev_key (string)    : The API developer key of a registered account. 
+                          This will be used to, among other things, throttle users based on their allocated quota
+original_url (string)   : Original URL to be shortened.
+custom_alias (string)   : Optional custom key for the URL.
+user_name (string)      : Optional user name to be used in the encoding.
+expire_date (string)    : Optional expiration date for the shortened URL.
+```
+
+**Returns:**(string)
+A successful insertion returns the shortened URL; otherwise, it returns an error code.
 
 ```
-deletePaste(api_dev_key, api_paste_key)
+deleteURL(api_dev_key,url_kexy)
 ```
 
-A successful deletion returns 'true', otherwise returns 'false'.
+Where "url_key" is a string representing the shortened URL to be retrieved. A successful deletion returns 'URL Removed'.
 
-###
+**How do we detect and prevent abuse?** A malicious user can put us out of business by consuming all URL keys 
+in the current design. To prevent abuse, we can limit users via their api_dev_key. Each api_dev_key can be limited 
+to a certain number of URL creations and redirections per some time period (which may be set to a different duration 
+per developer key).
 
-> 6\. Database Design
+## 5. Database Design  
 
-A few observations about the nature of the data we are storing:
+> :bulb: Defining the DB schema in the early stages of the interview would help to understand the data 
+> 
+>        flow among various components and later would guide towards data partitioning.
+
+A few observations about the nature of the data we will store:
 
 1.  We need to store billions of records.
-2.  Each metadata object we are storing would be small (less than 1KB).
-3.  Each paste object we are storing can be of medium size (it can be a few MB).
-4.  There are no relationships between records, except if we want to store which user created what Paste.
-5.  Our service is read-heavy.
+1.  Each object we store is small (less than 1K).
+1.  There are no relationships between records---other than storing which user created a URL.
+1.  Our service is read-heavy.
 
 #### Database Schema:
 
-We would need two tables, one for storing information about the Pastes and the other for users' data.
+We would need two tables: one for storing information about the URL mappings, and one for the user's data 
+who created the short link.
 
-![widget](https://www.educative.io/api/collection/5668639101419520/5649050225344512/page/5653164804014080/image/5026432671547392.png)
+![url-shortening-database-design](assets/url-shortening-database-design.PNG)
 
-Here, 'URlHash' is the URL equivalent of the TinyURL and 'ContentKey' is a reference to an external object storing the contents of the paste; we'll discuss the external storage of the paste contents later in the chapter.
+What kind of database should we use?Since we anticipate storing billions of rows, and 
+we don't need to use relationships between objects -- a NoSQL store like 
+[DynamoDB](https://en.wikipedia.org/wiki/Amazon_DynamoDB), 
+[Cassandra](https://en.wikipedia.org/wiki/Apache_Cassandra), or,
+[Riak](https://en.wikipedia.org/wiki/Riak) is a better choice. 
+A NoSQL choice would also be easier to scale. 
+Please see [SQL vs NoSQL](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5728116278296576/) 
+for more details.
 
-###
+## 6. Basic System Design and Algorithm  
 
-> 7\. High Level Design
+The problem we are solving here is, how to generate a short and unique key for a given URL.
 
-At a high level, we need an application layer that will serve all the read and write requests. Application layer will talk to a storage layer to store and retrieve data. We can segregate our storage layer with one database storing metadata related to each paste, users, etc., while the other storing the paste contents in some object storage (like [Amazon S3](https://en.wikipedia.org/wiki/Amazon_S3)). This division of data will also allow us to scale them individually.
+In the TinyURL example in Section 1, the shortened URL is 
+["http://tinyurl.com/jlg8zpc"](http://tinyurl.com/jlg8zpc%E2%80%9D). 
+The last seven characters of this URL is the short key we want to generate. We'll explore two solutions here:
 
-![widget](https://www.educative.io/api/collection/5668639101419520/5649050225344512/page/5653164804014080/image/5656058538229760.png)
+#### a. Encoding an actual URL
 
-###
+We can compute a unique hash (e.g., [MD5](https://en.wikipedia.org/wiki/MD5) or 
+[SHA256](https://en.wikipedia.org/wiki/SHA-2), etc.) of the given URL. 
+The hash can then be encoded for displaying. This encoding could be base36 ([a-z ,0-9]) or 
+base62 ([A-Z, a-z, 0-9]) and if we add '+' and '/' we can use 
+[Base64](https://en.wikipedia.org/wiki/Base64#Base64_table) encoding. 
+A reasonable question would be, what should be the length of the short key? 6, 8, or 10 characters?
 
-> 8\. Component Design
+Using base64 encoding, a 6 letters long key would result in 64^6 = ~68.7 billion possible strings.
+Using base64 encoding, an 8 letters long key would result in 64^8 = ~281 trillion possible strings.
 
-### a. Application layer
+With 68.7B unique strings, let's assume six letter keys would suffice for our system.
 
-Our application layer will process all incoming and outgoing requests. The application servers will be talking to the backend data store components to serve the requests.
+If we use the MD5 algorithm as our hash function, it'll produce a 128-bit hash value. After base64 encoding, 
+we'll get a string having more than 21 characters (since each base64 character encodes 6 bits of the hash value). 
+Now we only have space for 8 characters per short key, how will we choose our key then? 
+We can take the first 6 (or 8) letters for the key. This could result in key duplication, to resolve that, 
+we can choose some other characters out of the encoding string or swap some characters.
 
-How to handle a write request? Upon receiving a write request, our application server will generate a six-letter random string, which would serve as the key of the paste (if the user has not provided a custom key). The application server will then store the contents of the paste and the generated key in the database. After the successful insertion, the server can return the key to the user. One possible problem here could be that the insertion fails because of a duplicate key. Since we are generating a random key, there is a possibility that the newly generated key could match an existing one. In that case, we should regenerate a new key and try again. We should keep retrying until we don't see failure due to the duplicate key. We should return an error to the user if the custom key they have provided is already present in our database.
+**What are the different issues with our solution?** 
+We have the following couple of problems with our encoding scheme:
 
-Another solution of the above problem could be to run a standalone Key Generation Service (KGS) that generates random six letters strings beforehand and stores them in a database (let's call it key-DB). Whenever we want to store a new paste, we will just take one of the already generated keys and use it. This approach will make things quite simple and fast since we will not be worrying about duplications or collisions. KGS will make sure all the keys inserted in key-DB are unique. KGS can use two tables to store keys, one for keys that are not used yet and one for all the used keys. As soon as KGS gives some keys to an application server, it can move these to the used keys table. KGS can always keep some keys in memory so that whenever a server needs them, it can quickly provide them. As soon as KGS loads some keys in memory, it can move them to the used keys table, this way we can make sure each server gets unique keys. If KGS dies before using all the keys loaded in memory, we will be wasting those keys. We can ignore these keys given that we have a huge number of them.
+1.  If multiple users enter the same URL, they can get the same shortened URL, which is not acceptable.
+2.  What if parts of the URL are URL-encoded? e.g., <http://www.educative.io/distributed.php?id=design>, and 
+    <http://www.educative.io/distributed.php%3Fid%3Ddesign> are identical except for the URL encoding.
 
-Isn't KGS a single point of failure? Yes, it is. To solve this, we can have a standby replica of KGS and whenever the primary server dies it can take over to generate and provide keys.
+**Workaround for the issues:** We can append an increasing sequence number to each input URL to make it unique, 
+and then generate a hash of it. We don't need to store this sequence number in the databases, though. 
+Possible problems with this approach could be an ever-increasing sequence number. Can it overflow? 
+Appending an increasing sequence number will also impact the performance of the service.
 
-Can each app server cache some keys from key-DB? Yes, this can surely speed things up. Although in this case, if the application server dies before consuming all the keys, we will end up losing those keys. This could be acceptable since we have 68B unique six letters keys, which are a lot more than we require.
+Another solution could be to append user id (which should be unique) to the input URL. 
+However, if the user has not signed in, we would have to ask the user to choose a uniqueness key. 
+Even after this, if we have a conflict, we have to keep generating a key until we get a unique one.
 
-How does it handle a paste read request? Upon receiving a read paste request, the application service layer contacts the datastore. The datastore searches for the key, and if it is found, returns the paste's contents. Otherwise, an error code is returned.
+Request flow for shortening of a URL
 
-> ### b. Datastore layer
+![](assets/request-flow-url-shortening-service-1.PNG)
+![](assets/request-flow-url-shortening-service-2.PNG)
+![](assets/request-flow-url-shortening-service-3.PNG)
+![](assets/request-flow-url-shortening-service-4.PNG)
+![](assets/request-flow-url-shortening-service-5.PNG)
+![](assets/request-flow-url-shortening-service-6.PNG)
+![](assets/request-flow-url-shortening-service-7.PNG)
+![](assets/request-flow-url-shortening-service-8.PNG)
+![](assets/request-flow-url-shortening-service-9.PNG)
 
-We can divide our datastore layer into two:
+#### b. Generating keys offline
 
-1.  Metadata database: We can use a relational database like MySQL or a Distributed Key-Value store like Dynamo or Cassandra.
-2.  Object storage: We can store our contents in an Object Storage like Amazon's S3. Whenever we feel like hitting our full capacity on content storage, we can easily increase it by adding more servers.
+We can have a standalone **Key Generation Service (KGS)** that generates random six-letter strings beforehand 
+and stores them in a database (let's call it key-DB). Whenever we want to shorten a URL, we will just take one 
+of the already-generated keys and use it. This approach will make things quite simple and fast. Not only 
+are we not encoding the URL, but we won't have to worry about duplications or collisions. KGS will make sure 
+all the keys inserted into key-DB are unique
 
-![widget](https://www.educative.io/api/collection/5668639101419520/5649050225344512/page/5653164804014080/image/5734055144325120.png)
+**Can concurrency cause problems?** As soon as a key is used, it should be marked in the database to ensure 
+it is not used again. If there are multiple servers reading keys concurrently, we might get a scenario 
+where two or more servers try to read the same key from the database. How can we solve this concurrency problem?
 
-Detailed component design for Pastebin
+Servers can use KGS to read/mark keys in the database. KGS can use two tables to store keys: one for keys that 
+are not used yet, and one for all the used keys. As soon as KGS gives keys to one of the servers, it can move them to 
+the used keys table. KGS can always keep some keys in memory so that it can quickly provide them whenever 
+a server needs them.
 
-###
+For simplicity, as soon as KGS loads some keys in memory, it can move them to the used keys table. 
+This ensures each server gets unique keys. If KGS dies before assigning all the loaded keys to some server, 
+we will be wasting those keys--which could be acceptable, given the huge number of keys we have.
 
-> 9\. Purging or DB Cleanup
+KGS also has to make sure not to give the same key to multiple servers. For that, it must synchronize (or get a 
+lock on) the data structure holding the keys before removing keys from it and giving them to a server.
 
-Please see [Designing a URL Shortening service](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5668600916475904).
+**What would be the key-DB size?** With base64 encoding, we can generate 68.7B unique six letters keys. 
+If we need one byte to store one alpha-numeric character, we can store all these keys in:
 
-###
+>                                  **6 (characters per key) * 68.7B (unique keys) = 412 GB.**
 
-> 10\. Data Partitioning and Replication
+**Isn't KGS a single point of failure?** Yes, it is. To solve this, we can have a standby replica of KGS. 
+Whenever the primary server dies, the standby server can take over to generate and provide keys.
 
-Please see [Designing a URL Shortening service](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5668600916475904).
+**Can each app server cache some keys from key-DB?** Yes, this can surely speed things up. Although in this case, 
+if the application server dies before consuming all the keys, we will end up losing those keys. 
+This can be acceptable since we have 68B unique six-letter keys.
 
-###
+**How would we perform a key lookup?** We can look up the key in our database to get the full URL. 
+If it's present in the DB, issue an "HTTP 302 Redirect" status back to the browser, passing the stored URL in the 
+"Location" field of the request. If that key is not present in our system, issue an "HTTP 404 Not Found" status 
+or redirect the user back to the homepage.
 
-> 11\. Cache and Load Balancer
+**Should we impose size limits on custom aliases?** Our service supports custom aliases. Users can pick any 
+'key' they like, but providing a custom alias is not mandatory. However, it is reasonable (and often desirable) 
+to impose a size limit on a custom alias to ensure we have a consistent URL database. Let's assume users can 
+specify a maximum of 16 characters per customer key (as reflected in the above database schema).
 
-Please see [Designing a URL Shortening service](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5668600916475904).
+![high-level-system-design-for-url-shortening](assets/high-level-system-design-for-url-shortening.PNG)
 
-###
+# 7. Data Partitioning and Replication  
 
-> 12\. Security and Permissions
+To scale out our DB, we need to partition it so that it can store information about billions of URLs. 
+We need to come up with a partitioning scheme that would divide and store our data into different DB servers.
 
-Please see [Designing a URL Shortening service](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5668600916475904).
+a. Range Based Partitioning:We can store URLs in separate partitions based on the first letter of the hash key. 
+Hence, we save all the URLs starting with letter 'A' (and 'a') in one partition, save those that start with 
+letter 'B' in another partition and so on. This approach is called range-based partitioning. We can even 
+combine certain less frequently occurring letters into one database partition. We should come up with a static 
+partitioning scheme so that we can always store/find a URL in a predictable manner.
+
+The main problem with this approach is that it can lead to unbalanced DB servers. For example, we decide to 
+put all URLs starting with letter 'E' into a DB partition, but later we realize that we have too many URLs 
+that start with the letter 'E'.
+
+**b. Hash-Based Partitioning:** In this scheme, we take a hash of the object we are storing. We then calculate 
+which partition to use based upon the hash. In our case, we can take the hash of the 'key' or the short link to 
+determine the partition in which we store the data object.
+
+Our hashing function will randomly distribute URLs into different partitions (e.g., our hashing function can 
+always map any 'key' to a number between [1...256]), and this number would represent the partition in which we 
+store our object.
+
+This approach can still lead to overloaded partitions, which can be solved by using 
+[Consistent Hashing](https://www.educative.io/collection/page/5668639101419520/5649050225344512/5709068098338816/).
+
+## 8. Cache  
+
+We can cache URLs that are frequently accessed. We can use some off-the-shelf solution like 
+[Memcached](https://en.wikipedia.org/wiki/Memcached), which can store full URLs with their respective hashes. 
+The application servers, before hitting backend storage, can quickly check if the cache has the desired URL.
+
+**How much cache memory should we have?** We can start with 20% of daily traffic and, based on clients' usage pattern, 
+we can adjust how many cache servers we need. As estimated above, we need 170GB memory to cache 20% of daily traffic. 
+Since a modern-day server can have 256GB memory, we can easily fit all the cache into one machine. 
+Alternatively, we can use a couple of smaller servers to store all these hot URLs.
+
+**Which cache eviction policy would best fit our needs?** When the cache is full, and we want to replace a 
+link with a newer/hotter URL, how would we choose? **Least Recently Used (LRU)** can be a reasonable policy for 
+our system. Under this policy, we discard the least recently used URL first. 
+We can use a [Linked Hash Map](https://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashMap.html) or a 
+similar data structure to store our URLs and Hashes, which will also keep track of the URLs 
+that have been accessed recently.
+
+To further increase the efficiency, we can replicate our caching servers to distribute the load between them.
+
+**How can each cache replica be updated?** Whenever there is a cache miss, our servers would be hitting a 
+backend database. Whenever this happens, we can update the cache and pass the new entry to all the cache replicas. 
+Each replica can update its cache by adding the new entry. If a replica already has that entry, it can simply ignore it.
+
+Request flow for accessing a shortened URL
+
+![](assets/request-flow-for-accessing-a-shortened-url-1.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-2.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-3.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-4.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-5.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-6.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-7.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-8.PNG)
+![](assets/request-flow-for-accessing-a-shortened-url-9.PNG)
+
+## 9. Load Balancer (LB)  
+
+We can add a Load balancing layer at three places in our system:
+
+1.  Between Clients and Application servers
+1.  Between Application Servers and database servers
+1.  Between Application Servers and Cache servers
+
+Initially, we could use a simple **Round Robin** approach that distributes incoming requests equally 
+among backend servers. This LB is simple to implement and does not introduce any overhead. Another 
+benefit of this approach is that if a server is dead, LB will take it out of the rotation and will 
+stop sending any traffic to it.
+
+A problem with **Round Robin LB** is that we don't take the server load into consideration. If a server is overloaded 
+or slow, the LB will not stop sending new requests to that server. To handle this, a more intelligent LB solution 
+can be placed that periodically queries the backend server about its load and adjusts traffic based on that.
+
+## 10. Purging or DB cleanup  
+
+Should entries stick around forever or should they be purged? If a user-specified expiration time is reached, 
+what should happen to the link?
+
+If we chose to actively search for expired links to remove them, it would put a lot of pressure on our database. 
+Instead, we can slowly remove expired links and do a lazy cleanup. Our service will make sure that only 
+expired links will be deleted, although some expired links can live longer but will never be returned to users.
+
+* Whenever a user tries to access an expired link, we can delete the link and return an error to the user.
+* A separate Cleanup service can run periodically to remove expired links from our storage and cache. 
+  This service should be very lightweight and can be scheduled to run only when the user traffic is expected to be low.
+* We can have a default expiration time for each link (e.g., two years).
+* After removing an expired link, we can put the key back in the key-DB to be reused.
+* Should we remove links that haven't been visited in some length of time, say six months? This could be tricky. 
+  Since storage is getting cheap, we can decide to keep links forever.
+
+![detailed-component-design-for-url-shortening](assets/detailed-component-design-for-url-shortening.PNG)
+
+## 11. Telemetry  
+
+How many times a short URL has been used, what were user locations, etc.? How would we store these statistics? 
+If it is part of a DB row that gets updated on each view, what will happen when a popular URL is slammed with a 
+large number of concurrent requests?
+
+Some statistics worth tracking: country of the visitor, date and time of access, web page that refers the click, 
+browser, or platform from where the page was accessed.
+
+## 12. Security and Permissions  
+
+Can users create private URLs or allow a particular set of users to access a URL?
+
+We can store the permission level (public/private) with each URL in the database. 
+We can also create a separate table to store UserIDs that have permission to see a specific URL. 
+If a user does not have permission and tries to access a URL, we can send an error (HTTP 401) back. 
+Given that we are storing our data in a NoSQL wide-column database like Cassandra, the key for the table 
+storing permissions would be the 'Hash' (or the KGS generated 'key'). The columns will store the UserIDs 
+of those users that have the permission to see the URL.
+
+:back:[Back - `System Design Interviews - A step by step guide`](../README.md)    :arrow_right:[Next - `Designing Pastebin`](../Designing Pastebin/README.md)
+
+- [ x ] Mark as Completed
