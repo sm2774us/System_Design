@@ -17,6 +17,8 @@ We'll cover the following:
   - [Database Schema:](#database-schema)
 * [7. High Level Design](#7-high-level-design)
 * [8. Component Design](#8-component-design)
+  - [a. Application layer](#a-application-layer)
+  - [b. Datastore layer](#b-datastore-layer)
 * [9. Purging or DB cleanup](#9-purging-or-db-cleanup)
 * [10. Data Partitioning and Replication](#10-data-partitioning-and-replication)
 * [11. Cache and Load Balancer](#11-cache-and-load-balancer)
