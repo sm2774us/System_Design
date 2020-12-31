@@ -118,7 +118,7 @@ databases are MongoDB, CouchDB, Cassandra, and HBase.
     ahead of time. If you’re working on quick iterations of your system which require making frequent 
     updates to the data structure without a lot of downtime between versions, a relational database will slow you down.
     
-:back:[**Back - Designing Pastebin**](../007_Redundancy_and_Replication/README.md)
-:arrow_right:[**Next - Designing Dropbox**](../009_CAP_Theorem/README.md)
+:back:[**Back - Redundancy and Replication**](../007_Redundancy_and_Replication/README.md)
+:arrow_right:[**Next - CAP Theorem**](../009_CAP_Theorem/README.md)
 
 - [ x ] Mark as Completed
