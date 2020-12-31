@@ -318,6 +318,19 @@ We will discuss this technique under ‘Data Sharding’ in [Designing Twitter](
 
 ## 13. Cache and Load Balancing
 
+Our service would need a massive-scale photo delivery system to serve globally distributed users. Our service 
+should push its content closer to the user using a large number of geographically distributed photo cache 
+servers and use CDNs (for details, see [Caching](../017_Glossary_Of_System_Design_Basics/003_Caching/README.md)).
+
+We can introduce a cache for metadata servers to cache hot database rows. We can use Memcache to cache 
+the data, and Application servers before hitting the database, can quickly check if the cache has desired rows. 
+Least Recently Used (LRU) can be a reasonable cache eviction policy for our system. Under this policy, 
+we discard the least recently viewed row first.
+
+**How can we build a more intelligent cache?** If we go with the eighty-twenty rule, i.e., 20% of daily read 
+volume for photos is generating 80% of the traffic, which means that certain photos are so popular that most 
+people read them. This dictates that we can try caching 20% of the daily read volume of photos and metadata.
+
 :back:[**Back - Designing Pastebin**](../002_Designing_Pastebin/README.md)
 :arrow_right:[**Next - Designing Dropbox**](../004_Designing_Dropbox/README.md)
 
