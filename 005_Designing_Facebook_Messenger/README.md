@@ -8,7 +8,7 @@ We'll cover the following:
 * [1. What is Facebook Messenger?](#1-what-is-facebook-messenger)
 * [2. Requirements and Goals of the System](#2-requirements-and-goals-of-the-system)
 * [3. Capacity Estimation and Constraints](#3-capacity-estimation-and-constraints)
-* [5. High Level Design](#4-high-level-design)
+* [4. High Level Design](#4-high-level-design)
 * [5. Detailed Component Design](#5-detailed-component-design)
   - [a. Message Handling](#a-message-handling)
   - [b. Storing and retrieving the messages from the database](#b-storing-and-retrieving-the-messages-from-the-database)
