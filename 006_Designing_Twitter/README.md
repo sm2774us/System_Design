@@ -11,7 +11,7 @@ We'll cover the following:
 * [4. System APIs](#4-system-apis)
 * [5. High Level System Design](#5-high-level-system-design)
 * [6. Database Schema](#6-database-schema)
-* [7. Data Sharding](#6-data-sharding)
+* [7. Data Sharding](#7-data-sharding)
 * [8. Cache](#8-cache)
 * [9. Timeline Generation](#9-timeline-generation)
 * [10. Fault Tolerance and Replication](#9-fault-tolerance-and-replication)
