@@ -51,6 +51,8 @@ to provide a data store that is often written to and rarely read from, in that c
 of the more common operation, which is writing, is probably not worth the increase in performance we get 
 from reading.
 
+For more details, see [Database Indexes](https://en.wikipedia.org/wiki/Database_index).
+
 :back:[**Back - Data Partitioning**](../004_Data_Partitioning/README.md)
 :arrow_right:[**Next - Proxies**](../006_Proxies/README.md)
 
