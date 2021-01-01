@@ -90,6 +90,6 @@ Following links have some good discussion about caching:
 [2] [Introduction to architecting systems](https://lethain.com/introduction-to-architecting-systems-for-scale/)
 
 :back:[**Back - Load Balancing**](../002_Load_Balancing/README.md)
-:arrow_right:[**Next - Data Partitioning**](../003_Data_Partitioning/README.md)
+:arrow_right:[**Next - Data Partitioning**](../004_Data_Partitioning/README.md)
 
 - [ x ] Mark as Completed
