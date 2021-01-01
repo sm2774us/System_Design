@@ -12,7 +12,7 @@ We'll cover the following:
 * [3. Scale Estimation](#3-scale-estimation)
 * [4. Database Schema](#4-database-schema)
 * [5. System APIs](#5-system-apis)
-* [6. Basic System Design and Algorithm](#5-basic-system-design-and-algorithm)
+* [6. Basic System Design and Algorithm](#6-basic-system-design-and-algorithm)
   - [a. SQL solution](#a-sql-solution)
   - [b. Grids](#b-grids)
   - [c. Dynamic size grids](#c-dynamic-size-grids)
