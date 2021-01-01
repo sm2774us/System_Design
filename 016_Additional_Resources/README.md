@@ -24,5 +24,6 @@ Here are some useful links for further reading:
 1. [Hadoop](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf) - A Distributed File System
 
 :back:[**Back - Designing Ticketmaster**](../015_Designing_Ticketmaster/README.md)
+:arrow_right:[**Next - System Design Basics**](../017_Glossary_Of_System_Design_Basics/000_System_Design_Basics/README.md)
 
 - [ x ] Mark as Completed
