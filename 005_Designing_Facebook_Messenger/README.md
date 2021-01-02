@@ -328,4 +328,6 @@ them to the user’s device.
 :back:[**Back - Designing Dropbox**](../004_Designing_Dropbox/README.md)
 :arrow_right:[**Next - Designing Twitter**](../006_Designing_Twitter/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
