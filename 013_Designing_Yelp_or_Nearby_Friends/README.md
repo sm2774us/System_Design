@@ -349,4 +349,6 @@ Our next problem, Designing Uber backend, discusses dynamic updates of the QuadT
 :back:[**Back - Designing Facebook's Newsfeed**](../012_Designing_Facebook's_Newsfeed/README.md)
 :arrow_right:[**Next - Designing Uber backend**](../014_Designing_Uber_backend/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
