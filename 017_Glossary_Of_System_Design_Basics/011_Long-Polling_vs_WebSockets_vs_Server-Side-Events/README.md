@@ -91,4 +91,6 @@ a loop and will be sending multiple events to the client.
 :back:[**Back - Consistent Hashing**](../010_Consistent_Hashing/README.md)
 :arrow_right:[**Next - Cloud Storage**](../012_Cloud_Storage/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
