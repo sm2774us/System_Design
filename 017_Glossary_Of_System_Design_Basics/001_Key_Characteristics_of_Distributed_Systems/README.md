@@ -120,4 +120,6 @@ automatically call a service center (without human intervention) when the system
 :back:[**Back - System Design Basics**](../000_System_Design_Basics/README.md)
 :arrow_right:[**Next - Load Balancing**](../002_Load_Balancing/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
