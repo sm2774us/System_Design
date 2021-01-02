@@ -427,4 +427,6 @@ of those users that have the permission to see the URL.
 :back:[**Back - System Design Interviews - A step by step guide**](../000_System_Design_Interviews_A_Step_by_Step_Guide/README.md)
 :arrow_right:[**Next - Designing Pastebin**](../002_Designing_Pastebin/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
