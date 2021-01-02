@@ -334,4 +334,6 @@ people read them. This dictates that we can try caching 20% of the daily read vo
 :back:[**Back - Designing Pastebin**](../002_Designing_Pastebin/README.md)
 :arrow_right:[**Next - Designing Dropbox**](../004_Designing_Dropbox/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
