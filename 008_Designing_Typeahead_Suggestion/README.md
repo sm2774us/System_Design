@@ -270,4 +270,6 @@ should always come before others.
 :back:[**Back - Designing Youtube or Netflix**](../007_Designing_Youtube_or_Netflix/README.md)
 :arrow_right:[**Next - Designing an API Rate Limiter**](../009_Designing_an_API_Rate_Limiter/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
