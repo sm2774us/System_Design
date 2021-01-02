@@ -56,4 +56,6 @@ For more details, see [Database Indexes](https://en.wikipedia.org/wiki/Database_
 :back:[**Back - Data Partitioning**](../004_Data_Partitioning/README.md)
 :arrow_right:[**Next - Proxies**](../006_Proxies/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
