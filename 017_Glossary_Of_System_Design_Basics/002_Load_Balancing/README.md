@@ -95,4 +95,6 @@ Following links have some good discussion about load balancers:
 :back:[**Back - Key Characteristics of Distributed Systems**](../001_Key_Characteristics_of_Distributed_Systems)
 :arrow_right:[**Next - Caching**](../003_Caching/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
