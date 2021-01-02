@@ -136,4 +136,6 @@ Let’s apply the above guidelines to design a few systems that are asked in SDI
 
 :arrow_right:[**Next - Designing a URL Shortening service like TinyURL**](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
