@@ -312,4 +312,6 @@ requiring more memory and storage.
 :back:[**Back - Designing Typeahead Suggestion**](../008_Designing_Typeahead_Suggestion/README.md)
 :arrow_right:[**Next - Designing Twitter Search**](../010_Designing_Twitter_Search/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
