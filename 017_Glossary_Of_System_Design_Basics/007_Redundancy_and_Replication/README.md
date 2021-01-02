@@ -24,4 +24,6 @@ successfully, thus allowing the sending of subsequent updates.
 :back:[**Back - Proxies**](../006_Proxies/README.md)
 :arrow_right:[**Next - SQL vs. NoSQL**](../008_SQL_vs_NoSQL/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
