@@ -192,4 +192,6 @@ partitions.
 :back:[**Back - Designing Yelp or Nearby Friends**](../013_Designing_Yelp_or_Nearby_Friends/README.md)
 :arrow_right:[**Next - Designing Ticketmaster**](../015_Designing_Ticketmaster/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
