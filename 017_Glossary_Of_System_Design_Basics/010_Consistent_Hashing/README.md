@@ -76,4 +76,6 @@ If the hash function “mixes well,” as the number of replicas increases, the 
 :back:[**Back - CAP Throrem**](../009_CAP_Theorem/README.md)
 :arrow_right:[**Next - Long-Polling vs WebSockets vs Server-Side Events**](../011_Long-Polling_vs_WebSockets_vs_Server-Side-Events/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
