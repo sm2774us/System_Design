@@ -273,4 +273,6 @@ Please see [Designing a URL Shortening service: Section 12. Security and Permiss
 :back:[**Back - Designing a URL Shortening service like TinyURL**](../001_Designing_a_URL_Shortening_service_like_TinyURL/README.md)
 :arrow_right:[**Next - Designing Instagram**](../003_Designing_Instagram/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
