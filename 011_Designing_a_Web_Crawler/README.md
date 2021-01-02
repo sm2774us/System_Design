@@ -286,4 +286,6 @@ while other sites use traps to catch search engine crawlers to boost their searc
 :back:[**Back - Designing Twitter Search**](../010_Designing_Twitter_Search/README.md)
 :arrow_right:[**Next - Designing Facebook's Newsfeed**](../012_Designing_Facebook's_Newsfeed/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
