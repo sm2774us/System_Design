@@ -362,4 +362,6 @@ metadata DB to reflect what files are visible or modifiable by any user.
 :back:[**Back - Designing Instagram**](../003_Designing_Instagram/README.md)
 :arrow_right:[**Next - Designing Facebook_Messenger**](../005_Designing_Facebook_Messenger/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
