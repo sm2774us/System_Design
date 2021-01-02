@@ -45,4 +45,6 @@ returned to the client, appearing as if they originated from the proxy server it
 :back:[**Back - Indexes**](../005_Indexes/README.md)
 :arrow_right:[**Next - Redundancy and Replication**](../007_Redundancy_and_Replication/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
