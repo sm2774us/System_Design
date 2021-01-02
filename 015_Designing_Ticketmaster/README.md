@@ -374,4 +374,6 @@ Whenever a reservation is successful, following things will happen:
 :back:[**Back - Designing Uber backend**](../014_Designing_Uber_backend/README.md)
 :arrow_right:[**Next - Additional Resources**](../016_Additional_Resources/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
