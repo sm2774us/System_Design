@@ -203,4 +203,6 @@ on the popularity number, and sends the top results to the user.
 :back:[**Back - Designing an API Rate Limiter**](../009_Designing_an_API_Rate_Limiter/README.md)
 :arrow_right:[**Next - Designing a Web Crawler**](../011_Designing_a_Web_Crawler/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
