@@ -30,4 +30,6 @@ available.
 :back:[**Back - SQL vs. NoSQL**](../008_SQL_vs_NoSQL/README.md)
 :arrow_right:[**Next - Consistent Hashing**](../010_Consistent_Hashing/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
