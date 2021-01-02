@@ -19,4 +19,6 @@ Let’s start with the Key Characteristics of Distributed Systems.
 :back:[**Back - Additional Resources**](../../016_Additional_Resources/README.md)
 :arrow_right:[**Next - Key Characteristics of Distributed Systems**](../001_Key_Characteristics_of_Distributed_Systems)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
