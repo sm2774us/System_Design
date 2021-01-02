@@ -26,4 +26,6 @@ Here are some useful links for further reading:
 :back:[**Back - Designing Ticketmaster**](../015_Designing_Ticketmaster/README.md)
 :arrow_right:[**Next - System Design Basics**](../017_Glossary_Of_System_Design_Basics/000_System_Design_Basics/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
