@@ -92,4 +92,6 @@ Following links have some good discussion about caching:
 :back:[**Back - Load Balancing**](../002_Load_Balancing/README.md)
 :arrow_right:[**Next - Data Partitioning**](../004_Data_Partitioning/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
