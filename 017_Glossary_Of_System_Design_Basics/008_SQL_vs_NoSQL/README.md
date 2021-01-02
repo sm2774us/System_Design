@@ -121,4 +121,6 @@ databases are MongoDB, CouchDB, Cassandra, and HBase.
 :back:[**Back - Redundancy and Replication**](../007_Redundancy_and_Replication/README.md)
 :arrow_right:[**Next - CAP Theorem**](../009_CAP_Theorem/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
