@@ -103,4 +103,6 @@ application storage profile.
 
 :back:[**Back - Long-Polling vs WebSockets vs Server-Side Events**](../011_Long-Polling_vs_WebSockets_vs_Server-Side-Events/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
