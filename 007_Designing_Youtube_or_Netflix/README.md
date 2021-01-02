@@ -346,4 +346,6 @@ help in replacing a dead server, but also help in distributing load among server
 :back:[**Back - Designing Twitter**](../006_Designing_Twitter/README.md)
 :arrow_right:[**Next - Designing Typeahead Suggestion**](../008_Designing_Typeahead_Suggestion/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
