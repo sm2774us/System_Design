@@ -109,4 +109,6 @@ new single point of failure (i.e. the lookup service/database).
 :back:[**Back - Caching**](../003_Caching/README.md)
 :arrow_right:[**Next - Indexes**](../005_Indexes/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
