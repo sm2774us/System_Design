@@ -288,4 +288,6 @@ growth and replication, we must use [Consistent Hashing](../017_Glossary_Of_Syst
 :back:[**Back - Designing a Web Crawler**](../011_Designing_a_Web_Crawler/README.md)
 :arrow_right:[**Next - Designing Yelp or Nearby Friends**](../013_Designing_Yelp_or_Nearby_Friends/README.md)
 
-- [ x ] Mark as Completed
+### Progress Tracker
+
+- [x] Mark as Completed
