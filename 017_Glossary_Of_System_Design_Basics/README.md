@@ -1,0 +1,15 @@
+# System Design Interview - Glossary of Terms
+
+* [System Design Basic](./000_System_Design_Basics/README.md)
+* [Key Characteristics of Distributed Systems](./001_Key_Characteristics_of_Distributed_Systems/README.md)
+* [Load Balancing](./002_Load_Balancing/README.md)
+* [Caching](./003_Caching/README.md)
+* [Data Partitioning](./004_Data_Partitioning/README.md)
+* [Indexes](./005_Indexes/README.md)
+* [Proxies](./006_Proxies/README.md)
+* [Redundancy and Replication](./007_Redundancy_and_Replication/README.md)
+* [SQL v/s NoSQL](./008_SQL_vs_NoSQL/README.md)
+* [CAP Theorem](./009_CAP_Theorem/README.md)
+* [Consistent Hashing](./010_Consistent_Hashing/README.md)
+* [Long-Polling v/s WebSockets v/s Server-Side-Events](./011_Long-Polling_vs_WebSockets_vs_Server-Side-Events/README.md)
+* [Cloud Storage](./012_Cloud_Storage/README.md)
